@@ -264,6 +264,29 @@ mod tests {
     }
 
     #[test]
+    fn test_selector_with_guessed_prefix() {
+        assert_eq!(
+            selector("transfer(address,uint256)"),
+            Selector::from([0xa9, 0x05, 0x9c, 0xbb])
+        );
+    
+        assert_eq!(
+            selector("paprika_guessed_a9059cbb"),
+            Selector::from([0xa9, 0x05, 0x9c, 0xbb])
+        );
+
+        assert_eq!(
+            selector("paprika_guessed_70a08231"),
+            Selector::from([0x70, 0xa0, 0x82, 0x31])
+        );
+
+        assert_eq!(
+            selector("balanceOf(address)"),
+            Selector::from([0x70, 0xa0, 0x82, 0x31])
+        );
+    }
+
+    #[test]
     fn test_signature() {
         assert_eq!(signature("foo", &[], None), "foo()");
         assert_eq!(signature("bar", &[param("bool")], None), "bar(bool)");
