@@ -119,7 +119,8 @@ pub(crate) fn event_full_signature(name: &str, inputs: &[EventParam]) -> String 
 
 /// `keccak256(preimage)[..4]`
 pub(crate) fn selector(preimage: &str) -> Selector {
-    // // we define a ABI wrapper for guessing abi
+    // we define a ABI wrapper for guessing abi
+    // paprika_guessed_ is the hard-coded prefix used in our project.
     if let Some(hex_str) = preimage.strip_prefix("paprika_guessed_") {
         if hex_str.len() >= 8 {
             let bytes = hex::decode(&hex_str[..8]).unwrap_or_default();
