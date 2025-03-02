@@ -1,6 +1,6 @@
 use crate::{EventParam, Param, StateMutability};
 use alloc::string::String;
-use alloy_primitives::Selector;
+use alloy_primitives::{hex, Selector};
 use core::{fmt::Write, num::NonZeroUsize};
 use parser::{utils::ParsedSignature, ParameterSpecifier, TypeSpecifier, TypeStem};
 
@@ -119,6 +119,16 @@ pub(crate) fn event_full_signature(name: &str, inputs: &[EventParam]) -> String 
 
 /// `keccak256(preimage)[..4]`
 pub(crate) fn selector(preimage: &str) -> Selector {
+    // // we define a ABI wrapper for guessing abi
+    if let Some(hex_str) = preimage.strip_prefix("paprika_guessed_") {
+        if hex_str.len() >= 8 {
+            let bytes = hex::decode(&hex_str[..8]).unwrap_or_default();
+            if bytes.len() == 4 {
+                return Selector::from_slice(&bytes);
+            }
+        }
+    }
+
     alloy_primitives::keccak256(preimage.as_bytes())[..4].try_into().unwrap()
 }
 
